@@ -1,6 +1,6 @@
 # ``ogma``
 
-<!--@START_MENU_TOKEN@-->Summary<!--@END_MENU_TOKEN@-->
+``ogma`` is a library for parsing Markdown and converting it to HTML. I'll probably add other features at a later date.
 
 ## Overview
 
