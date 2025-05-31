@@ -3,9 +3,44 @@
 #include "token.h"
 #include "token_list.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 // Helper stuff
-void scanner_add_token(Scanner* self, char c) {
+bool is_special_char(char c) {
+    bool special;
+    switch (c)
+    {
+    case '#':
+        special = true;
+        break;
+    case '\n':
+        special = true;
+        break;
+    case '*':
+        special = true;
+        break;
+    case '[':
+        special = true;
+        break;
+    case ']':
+        special = true;
+        break;
+    case '(':
+        special = true;
+        break;
+    case ')':
+        special = true;
+        break;
+    case '_':
+        special = true;
+    default:
+        special = false;
+        break;
+    }
+    return special;
+}
+
+void scan_token(Scanner* self, char c) {
     if (c == '#') {
         NCString *s = nc_string_init("#", sizeof(char));
         Token *t = token_init_with_components(s, H1);
@@ -35,11 +70,12 @@ void scanner_scan(Scanner* self) {
     int i = 0;
     int start = 0; // The start of the lexeme or whatever it's called
     int current = 0; // The current position if we have to scan ahead
+    char current_char = self->source->str[i];
 
-    while (self->source->str[i] != '\0') {
-        char current_char = self->source->str[i];
-        scanner_add_token(self, current_char);
+    while (current_char != '\0') {
+        scan_token(self, current_char);
         i++;
+        current_char = self->source->str[i];
     }
 }
 

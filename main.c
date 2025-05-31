@@ -16,7 +16,6 @@ int main (void) {
     scanner_scan(s);
     scanner_dump(s);
 
-    nc_string_free(string);
     scanner_free(s);
 
     /**************************************************************/

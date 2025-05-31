@@ -17,18 +17,15 @@ Token* token_init() {
 Token* token_init_with_components(NCString* str, TokenType type) {
     Token *t = malloc(sizeof(Token));
     t->type = type;
-    // TODO - Fix this so it copies each value by value and not reference to avoid dangling pointers
     t->str = nc_string_init(str->str, str->len);
     return t;
 }
 
-// TODO - dump function
 void token_dump(const struct Token* self) {
     printf("%s\n", self->str->str);
     printf("%d\n", self->type);
 }
 
-// TODO - free function
 void token_free(Token* self) {
     if (self) {
         self->type = 0;
