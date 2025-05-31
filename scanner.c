@@ -40,22 +40,10 @@ bool is_special_char(char c) {
     return special;
 }
 
-void scan_token(Scanner* self, char c) {
-    if (c == '#') {
-        NCString *s = nc_string_init("#", sizeof(char));
-        Token *t = token_init_with_components(s, H1);
-        token_list_append(self->tokens, *t);
-        token_free(t);
-        nc_string_free(s);
+void scan_token(Scanner* self, NCString* ncs, TokenType t) {
+    Token *token = token_init_with_components(ncs, t);
+    token_list_append(self->tokens, *token);
 
-    } else if (c == '\n') {
-        // New line
-        NCString *s = nc_string_init("\n", sizeof(char));
-        Token *t = token_init_with_components(s, NL);
-        token_list_append(self->tokens, *t);
-        token_free(t);
-        nc_string_free(s);
-    }
 }
 
 struct Scanner* scanner_init() {
@@ -73,9 +61,37 @@ void scanner_scan(Scanner* self) {
     char current_char = self->source->str[i];
 
     while (current_char != '\0') {
-        scan_token(self, current_char);
-        i++;
         current_char = self->source->str[i];
+        if (current_char == '#') {
+            int look_ahead = i + 1;
+            while (self->source->str[look_ahead] == '#') {
+                look_ahead++;
+            }
+            // Make a substring with the text
+            NCString *sub_string = nc_string_substring_in_range(self->source, i, look_ahead);
+            // Headers start at 2 so add that offset, then the length to figure out which H level
+            TokenType header_level = 2 + (look_ahead - i);
+            // Scan the token in
+            scan_token(self, sub_string, header_level);
+        } else if (current_char == '\n') {
+            // New line
+            // Make a substring with the text
+            NCString *sub_string = nc_string_substring_in_range(self->source, i, i);
+            // Scan the token in
+            scan_token(self, sub_string, NL);
+        } else {
+            // Text content
+            int look_ahead = i + 1;
+            while (!is_special_char(self->source->str[look_ahead])) {
+                look_ahead++;
+            }
+            // Make a substring with the text
+            NCString *sub_string = nc_string_substring_in_range(self->source, i, look_ahead);
+            // Scan the token in
+            scan_token(self, sub_string, P);
+            i = look_ahead;
+        }
+        i++;
     }
 }
 
