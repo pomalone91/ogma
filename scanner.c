@@ -64,15 +64,21 @@ void scanner_scan(Scanner* self) {
         current_char = self->source->str[i];
         if (current_char == '#') {
             int look_ahead = i + 1;
-            while (self->source->str[look_ahead] == '#') {
-                look_ahead++;
+            while (self->source->str[look_ahead] != '\0') {
+                if (self->source->str[look_ahead] == '#') {
+                    look_ahead++;
+                } else {
+                    break;
+                }
             }
+            current = look_ahead - 1;
             // Make a substring with the text
-            NCString *sub_string = nc_string_substring_in_range(self->source, i, look_ahead);
+            NCString *sub_string = nc_string_substring_in_range(self->source, i, current);
             // Headers start at 2 so add that offset, then the length to figure out which H level
-            TokenType header_level = 2 + (look_ahead - i);
+            TokenType header_level = 2 + (current - i);
             // Scan the token in
             scan_token(self, sub_string, header_level);
+            i = current;
         } else if (current_char == '\n') {
             // New line
             // Make a substring with the text
@@ -82,14 +88,20 @@ void scanner_scan(Scanner* self) {
         } else {
             // Text content
             int look_ahead = i + 1;
-            while (!is_special_char(self->source->str[look_ahead])) {
-                look_ahead++;
+            while (self->source->str[look_ahead] != '\0') {
+                if (!is_special_char(self->source->str[look_ahead])) {
+                    look_ahead++;
+                } else {
+                    break;
+                }
             }
+
+            current = look_ahead - 1;
             // Make a substring with the text
-            NCString *sub_string = nc_string_substring_in_range(self->source, i, look_ahead);
+            NCString *sub_string = nc_string_substring_in_range(self->source, i, current);
             // Scan the token in
             scan_token(self, sub_string, P);
-            i = look_ahead;
+            i = current;
         }
         i++;
     }

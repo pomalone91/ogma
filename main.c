@@ -7,7 +7,7 @@
 
 int main (void) {
 
-    char *str = "# This is some markdown\n Hell yeah.";
+    char *str = "# This is some markdown\n## Hell yeah. More text!\n### Header 3 baby!!!!";
     size_t len = strlen(str);
     NCString *string = nc_string_init(str, len);
     Scanner *s = scanner_init();
