@@ -15,10 +15,11 @@ typedef enum TokenType {
     H5,
     H6,
     NL,
-    BOLD,
-    ITALIC,
+    E1,
+    E2,
     URL,
     IMG,
+    EF
 } TokenType;
 
 // Token

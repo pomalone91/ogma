@@ -22,7 +22,7 @@ Token* token_init_with_components(NCString* str, TokenType type) {
 }
 
 void token_dump(const struct Token* self) {
-    printf("Type: %d; Length: %zu; Content: %s\n", self->type, self->str->len, self->str->str);
+    printf("Type: %d; Length: %zu; Content: '%s'\n", self->type, self->str->len, self->str->str);
 }
 
 void token_free(Token* self) {
