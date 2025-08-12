@@ -3,7 +3,6 @@
 #include <string.h>
 #include "scanner.h"
 #include "token.h"
-#include "token_list.h"
 #include "../lib/nc_string.h"
 #include "ast.h"
 
@@ -56,9 +55,20 @@ int main (void) {
     header->data.NodeHeader.headerLevel = header_level;
     header->data.NodeHeader.next_block = paragraph;
 
+    ASTList *ast_list = ast_list_init();
+    ast_list_append(ast_list, *header);
+    ast_list_append(ast_list, *paragraph);
+
     AST *doc = ast_init();
     doc->tag = DOCUMENT;
-    doc->data.NodeBlock.block = header;
+    doc->data.NodeDocument.blocks = ast_list;
+
+    // Try a dump
+    ast_dump(doc);
+
+    // Free stuff yipeeeeeee. Oh no the other free. 
+    // Freeing doc should recursively free everything else???
+    ast_free(doc);
 
     printf("%d, %d\n", a->tag, a->data.eol);
 

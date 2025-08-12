@@ -84,6 +84,7 @@ struct AST {
 
     } data;
 };
+
 // AST API
 struct AST* ast_init(); 
 void ast_dump(const struct AST* self);

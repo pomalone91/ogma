@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "../lib/nc_string.h"
-#include "token_list.h"
+#include "token.h"
 
 // Scanner 
 typedef struct Scanner {

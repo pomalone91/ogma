@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "scanner.h"
 #include "token.h"
-#include "token_list.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
