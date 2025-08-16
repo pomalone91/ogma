@@ -82,6 +82,8 @@ int main (void) {
     // Free stuff yipeeeeeee. Oh no the other free. 
     // Freeing doc should recursively free everything else???
     ast_free(doc);
+    free(doc);
+    doc = NULL;
 
     /**************************************************************/
     // char *str = "# This is some markdown\n## Hell yeah. More text!\n### Header 3 baby!!!!";

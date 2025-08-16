@@ -64,45 +64,99 @@ void ast_free(struct AST* self) {
     switch (self->tag) {
         // Leaf nodes
         case TEXT: 
-            nc_string_free(self->data.text);
-            free(self);
+            if (self) {
+                if (self->data.text) {
+                    nc_string_free(self->data.text);
+                    self->data.text = NULL;
+                }
+                free(self);
+                self = NULL;
+            }
             return;
         case EMPTY_LINE:
-            ast_free(self->data.EmptyLine.next_block);
-            free(self);
+            if (self) {
+                if (self->data.EmptyLine.next_block) {
+                    ast_free(self->data.EmptyLine.next_block);
+                    self->data.EmptyLine.next_block = NULL;
+                }
+                free(self);
+                self = NULL;
+            }
             return;
         case TAG_EOF:
             printf("END OF FILE\n");
             return;
         case HEADER_LEVEL:
-            free(self);
+            if (self) {
+                free(self);
+                self = NULL;
+            }
             return;
         // Non-leaf nodes require recursive descent
         case DOCUMENT:
-            ast_list_free(self->data.Document.blocks);
-            free(self);
+            if (self) {
+                if (self->data.Document.blocks) {
+                    ast_list_free(self->data.Document.blocks);
+                    self->data.Document.blocks = NULL;
+                }
+                //free(self);
+                //self = NULL;
+            }
             return;
         case BLOCK:
             printf("Printing Block!\n");
             return;
         case HEADER:
-            ast_free(self->data.Header.headerLevel);
-            ast_free(self->data.Header.formatted_text);
-            free(self);
+            if (self) {
+                if (self->data.Header.headerLevel) {
+                    ast_free(self->data.Header.headerLevel);
+                    self->data.Header.headerLevel = NULL;
+                }
+                if (self->data.Header.formatted_text) {
+                    ast_free(self->data.Header.formatted_text);
+                    self->data.Header.formatted_text = NULL;
+                }
+                free(self);
+                self = NULL;
+            }
             return;
         case PARAGRAPH:
-            ast_free(self->data.Paragraph.formatted_text);
-            free(self);
+            if (self) {
+                if (self->data.Paragraph.formatted_text) {
+                    ast_free(self->data.Paragraph.formatted_text);
+                    self->data.Paragraph.formatted_text = NULL;
+                }
+                free(self);
+                self = NULL;
+            }
             return;
         case FORMATTED_TEXT:
-            ast_free(self->data.FormattedText.text);
-            ast_free(self->data.FormattedText.emphasis);
-            free(self);
+            if (self) {
+                if (self->data.FormattedText.text) {
+                    ast_free(self->data.FormattedText.text);
+                    self->data.FormattedText.text = NULL;
+                }
+                if (self->data.FormattedText.emphasis) {
+                    ast_free(self->data.FormattedText.emphasis);
+                    self->data.FormattedText.emphasis = NULL;
+                }
+                free(self);
+                self = NULL;
+            }
             return;
         case EMPHASIS:
-            ast_free(self->data.Emphasis.text);
-            ast_free(self->data.Emphasis.formatted_text);
-            free(self);
+            if (self) {
+                if (self->data.Emphasis.text) {
+                    ast_free(self->data.Emphasis.text);
+                    self->data.Emphasis.text = NULL;
+                }
+                if (self->data.Emphasis.formatted_text) {
+                    ast_free(self->data.Emphasis.formatted_text);
+                    self->data.Emphasis.formatted_text = NULL;
+                }
+                free(self);
+                self = NULL;
+            }
             return;
     }
 }
