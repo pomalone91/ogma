@@ -33,36 +33,34 @@ struct AST {
         // Document := [ Block ]
         struct NodeDocument {
             ASTList *blocks; // Represents an array of block elements, headers or paragraphs
-        } NodeDocument;
+        } Document;
 
         // Block := Header | EmptyLine | Paragraph
-        struct NodeBlock {
-            AST *block;
-        } NodeBlock;
+        //struct NodeBlock {
+        //    AST *block;
+        //} Block;
 
         // Header := HeaderLevel FormattedText EmptyLine
         struct NodeHeader {
             AST *headerLevel; 
             AST *formatted_text;
-            AST *next_block;
-        } NodeHeader;
+        } Header;
 
         // HeaderLevel := '#' | '##' | '###' | '####' | '#####' | '######'
         struct NodeHeaderlevel {
             TokenType hl; 
-        } NodeHeaderLevel;
+        } HeaderLevel;
 
         // Paragraph := [ Formatted Text ]
         struct NodeParagraph {
             AST *formatted_text;
-            AST *next_block;
-        } NodeParagraph;
+        } Paragraph;
 
         // FormattedText := Emphasis | Text
         struct NodeFormattedText {
             AST *text; 
             AST *emphasis; 
-        } NodeFormattedText;
+        } FormattedText;
 
         // Text := Text
         NCString *text;
@@ -71,13 +69,13 @@ struct AST {
         struct NodeEmphasis {
             AST *text; 
             AST *formatted_text;
-        } NodeEmphasis;
+        } Emphasis;
 
         // EmptyLine := '\n'
         struct NodeEmptyLine {
             TokenType nl;
             AST *next_block;
-        } NodeEmptyLine;
+        } EmptyLine;
 
         // EndOfFile := '\0'
         TokenType eol;

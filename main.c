@@ -7,53 +7,68 @@
 #include "ast.h"
 
 int main (void) {
-    
-    // # Hello World\nHey!
-    AST *a = ast_init();
-    a->tag = DOCUMENT;
-    a->data.eol = EF;
 
+    //char *str1 = "Hey!";
+    //size_t len1 = sizeof(char) * 5;
+    //NCString *ncstr1 = nc_string_init(str1, len1);
+
+    //AST *leaf1 = ast_init();
+    //leaf1->tag = TEXT;
+    //leaf1->data.text = ncstr1;
+
+    //AST *ftext1 = ast_init();
+    //ftext1->tag = FORMATTED_TEXT;
+    //ftext1->data.FormattedText.text = leaf1;
+    //ftext1->data.FormattedText.emphasis = NULL;
+
+    //ast_dump(ftext1);
+
+    //ast_free(ftext1);
+    
+    /**************************************************************/
     // Literals leave nodes
     // Strings to build the literals with later
 
     char *str1 = "Hey!";
     size_t len1 = sizeof(char) * 5;
     NCString *ncstr1 = nc_string_init(str1, len1);
+
     AST *leaf1 = ast_init();
     leaf1->tag = TEXT;
     leaf1->data.text = ncstr1;
 
+    AST *ftext1 = ast_init();
+    ftext1->tag = FORMATTED_TEXT;
+    ftext1->data.FormattedText.text = leaf1;
+    ftext1->data.FormattedText.emphasis = NULL;
+
     char *str2 = "Hello World!";
     size_t len2 = sizeof(char) * 12;
     NCString *ncstr2 = nc_string_init(str2, len2);
+
     AST *leaf2 = ast_init();
     leaf2->tag = TEXT;
     leaf2->data.text = ncstr2;
 
-    AST *ftext1 = ast_init();
-    ftext1->tag = FORMATTED_TEXT;
-    ftext1->data.NodeFormattedText.text = leaf1;
-    ftext1->data.NodeFormattedText.emphasis = NULL;
-
     AST *ftext2 = ast_init();
     ftext2->tag = FORMATTED_TEXT;
-    ftext2->data.NodeFormattedText.text = leaf2;
-    ftext2->data.NodeFormattedText.emphasis = NULL;
+    ftext2->data.FormattedText.text = leaf2;
+    ftext2->data.FormattedText.emphasis = NULL;
 
     AST *paragraph = ast_init();
     paragraph->tag = PARAGRAPH;
-    paragraph->data.NodeParagraph.formatted_text = ftext2;
-    paragraph->data.NodeParagraph.next_block = NULL;
+    paragraph->data.Paragraph.formatted_text = ftext2;
+    paragraph->data.Paragraph.next_block = NULL;
 
     AST *header_level = ast_init();
     header_level->tag = HEADER_LEVEL;
-    header_level->data.NodeHeaderLevel.hl = H1;
+    header_level->data.HeaderLevel.hl = H1;
 
     AST *header = ast_init();
     header->tag = HEADER;
-    header->data.NodeHeader.formatted_text = ftext1;
-    header->data.NodeHeader.headerLevel = header_level;
-    header->data.NodeHeader.next_block = paragraph;
+    header->data.Header.formatted_text = ftext1;
+    header->data.Header.headerLevel = header_level;
+    header->data.Header.next_block = paragraph;
 
     ASTList *ast_list = ast_list_init();
     ast_list_append(ast_list, *header);
@@ -61,7 +76,7 @@ int main (void) {
 
     AST *doc = ast_init();
     doc->tag = DOCUMENT;
-    doc->data.NodeDocument.blocks = ast_list;
+    doc->data.Document.blocks = ast_list;
 
     // Try a dump
     ast_dump(doc);
@@ -69,8 +84,6 @@ int main (void) {
     // Free stuff yipeeeeeee. Oh no the other free. 
     // Freeing doc should recursively free everything else???
     ast_free(doc);
-
-    printf("%d, %d\n", a->tag, a->data.eol);
 
     /**************************************************************/
     // char *str = "# This is some markdown\n## Hell yeah. More text!\n### Header 3 baby!!!!";

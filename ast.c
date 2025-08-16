@@ -14,31 +14,48 @@ void ast_dump(const struct AST* self) {
         // Leaf nodes
         case TEXT: 
             printf("%s\n", self->data.text->str);
+            return;
         case EMPTY_LINE:
             printf("EMPTY LINE\n");
-            ast_dump(self->data.NodeEmptyLine.next_block);
+            if (self->data.EmptyLine.next_block)
+                ast_dump(self->data.EmptyLine.next_block);
+            return;
         case TAG_EOF:
             printf("END OF FILE\n");
+            return;
         case HEADER_LEVEL:
-            printf("%d\n", self->data.NodeHeaderLevel.hl);
+            printf("%d\n", self->data.HeaderLevel.hl);
+            return;
         // Non-leaf nodes require recursive descent
         case DOCUMENT:
-            ast_list_dump(self->data.NodeDocument.blocks);
+            if (self->data.Document.blocks)
+                ast_list_dump(self->data.Document.blocks);
+            return;
         case BLOCK:
             printf("Printing Block!\n");
+            return;
         case HEADER:
-            ast_dump(self->data.NodeHeader.headerLevel);
-            ast_dump(self->data.NodeHeader.formatted_text);
-            ast_dump(self->data.NodeHeader.next_block);
+            if (self->data.Header.headerLevel)
+                ast_dump(self->data.Header.headerLevel);
+            if (self->data.Header.formatted_text)
+                ast_dump(self->data.Header.formatted_text);
+            return;
         case PARAGRAPH:
-            ast_dump(self->data.NodeParagraph.formatted_text);
-            ast_dump(self->data.NodeParagraph.next_block);
+            if (self->data.Paragraph.formatted_text)
+                ast_dump(self->data.Paragraph.formatted_text);
+            return;
         case FORMATTED_TEXT:
-            ast_dump(self->data.NodeFormattedText.text);
-            ast_dump(self->data.NodeFormattedText.emphasis);
+            if (self->data.FormattedText.text)
+                ast_dump(self->data.FormattedText.text);
+            if (self->data.FormattedText.emphasis)
+                ast_dump(self->data.FormattedText.emphasis);
+            return;
         case EMPHASIS:
-            ast_dump(self->data.NodeEmphasis.text);
-            ast_dump(self->data.NodeEmphasis.formatted_text);
+            if (self->data.Emphasis.text)
+                ast_dump(self->data.Emphasis.text);
+            if (self->data.Emphasis.formatted_text)
+                ast_dump(self->data.Emphasis.formatted_text);
+            return;
     }
 }
 
@@ -49,36 +66,46 @@ void ast_free(struct AST* self) {
         case TEXT: 
             nc_string_free(self->data.text);
             free(self);
+            return;
         case EMPTY_LINE:
-            ast_free(self->data.NodeEmptyLine.next_block);
+            ast_free(self->data.EmptyLine.next_block);
             free(self);
+            return;
         case TAG_EOF:
             printf("END OF FILE\n");
+            return;
         case HEADER_LEVEL:
             free(self);
+            return;
         // Non-leaf nodes require recursive descent
         case DOCUMENT:
-            ast_list_free(self->data.NodeDocument.blocks);
+            ast_list_free(self->data.Document.blocks);
             free(self);
+            return;
         case BLOCK:
             printf("Printing Block!\n");
+            return;
         case HEADER:
-            ast_free(self->data.NodeHeader.headerLevel);
-            ast_free(self->data.NodeHeader.formatted_text);
-            ast_free(self->data.NodeHeader.next_block);
+            ast_free(self->data.Header.headerLevel);
+            ast_free(self->data.Header.formatted_text);
+            ast_free(self->data.Header.next_block);
             free(self);
+            return;
         case PARAGRAPH:
-            ast_free(self->data.NodeParagraph.formatted_text);
-            ast_free(self->data.NodeParagraph.next_block);
+            ast_free(self->data.Paragraph.formatted_text);
+            ast_free(self->data.Paragraph.next_block);
             free(self);
+            return;
         case FORMATTED_TEXT:
-            ast_free(self->data.NodeFormattedText.text);
-            ast_free(self->data.NodeFormattedText.emphasis);
+            ast_free(self->data.FormattedText.text);
+            ast_free(self->data.FormattedText.emphasis);
             free(self);
+            return;
         case EMPHASIS:
-            ast_free(self->data.NodeEmphasis.text);
-            ast_free(self->data.NodeEmphasis.formatted_text);
+            ast_free(self->data.Emphasis.text);
+            ast_free(self->data.Emphasis.formatted_text);
             free(self);
+            return;
     }
 }
 
