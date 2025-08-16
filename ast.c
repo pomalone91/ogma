@@ -88,12 +88,10 @@ void ast_free(struct AST* self) {
         case HEADER:
             ast_free(self->data.Header.headerLevel);
             ast_free(self->data.Header.formatted_text);
-            ast_free(self->data.Header.next_block);
             free(self);
             return;
         case PARAGRAPH:
             ast_free(self->data.Paragraph.formatted_text);
-            ast_free(self->data.Paragraph.next_block);
             free(self);
             return;
         case FORMATTED_TEXT:

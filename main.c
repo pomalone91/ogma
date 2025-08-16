@@ -58,7 +58,6 @@ int main (void) {
     AST *paragraph = ast_init();
     paragraph->tag = PARAGRAPH;
     paragraph->data.Paragraph.formatted_text = ftext2;
-    paragraph->data.Paragraph.next_block = NULL;
 
     AST *header_level = ast_init();
     header_level->tag = HEADER_LEVEL;
@@ -68,7 +67,6 @@ int main (void) {
     header->tag = HEADER;
     header->data.Header.formatted_text = ftext1;
     header->data.Header.headerLevel = header_level;
-    header->data.Header.next_block = paragraph;
 
     ASTList *ast_list = ast_list_init();
     ast_list_append(ast_list, *header);
