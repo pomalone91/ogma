@@ -1,13 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "scanner.h"
 #include "token.h"
 #include "../lib/nc_string.h"
 #include "ast.h"
+#include "md_doc.h"
 
 int main (void) {
 
+    // Setting up the string
+    char *str = "# This *is* some markdown\n## Body\nLorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim **veniam**, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
+    size_t len = strlen(str);
+    NCString *src_str = nc_string_init(str, len);
+
+    MDDoc *m = md_doc_init();
+    m->source = src_str;
+    m->tokens = token_list_scan(m->source);
+
+    md_doc_dump(m);
+    md_doc_free(m);
+
+    /**************************************************************/
     //char *str1 = "Hey!";
     //size_t len1 = sizeof(char) * 5;
     //NCString *ncstr1 = nc_string_init(str1, len1);
@@ -26,64 +39,64 @@ int main (void) {
     //ast_free(ftext1);
     
     /**************************************************************/
-    // Literals leave nodes
-    // Strings to build the literals with later
+    //// Literals leave nodes
+    //// Strings to build the literals with later
 
-    char *str1 = "Hey!";
-    size_t len1 = sizeof(char) * 5;
-    NCString *ncstr1 = nc_string_init(str1, len1);
+    //char *str1 = "Hey!";
+    //size_t len1 = sizeof(char) * 5;
+    //NCString *ncstr1 = nc_string_init(str1, len1);
 
-    AST *leaf1 = ast_init();
-    leaf1->tag = TEXT;
-    leaf1->data.text = ncstr1;
+    //AST *leaf1 = ast_init();
+    //leaf1->tag = TEXT;
+    //leaf1->data.text = ncstr1;
 
-    AST *ftext1 = ast_init();
-    ftext1->tag = FORMATTED_TEXT;
-    ftext1->data.FormattedText.text = leaf1;
-    ftext1->data.FormattedText.emphasis = NULL;
+    //AST *ftext1 = ast_init();
+    //ftext1->tag = FORMATTED_TEXT;
+    //ftext1->data.FormattedText.text = leaf1;
+    //ftext1->data.FormattedText.emphasis = NULL;
 
-    char *str2 = "Hello World!";
-    size_t len2 = sizeof(char) * 12;
-    NCString *ncstr2 = nc_string_init(str2, len2);
+    //char *str2 = "Hello World!";
+    //size_t len2 = sizeof(char) * 12;
+    //NCString *ncstr2 = nc_string_init(str2, len2);
 
-    AST *leaf2 = ast_init();
-    leaf2->tag = TEXT;
-    leaf2->data.text = ncstr2;
+    //AST *leaf2 = ast_init();
+    //leaf2->tag = TEXT;
+    //leaf2->data.text = ncstr2;
 
-    AST *ftext2 = ast_init();
-    ftext2->tag = FORMATTED_TEXT;
-    ftext2->data.FormattedText.text = leaf2;
-    ftext2->data.FormattedText.emphasis = NULL;
+    //AST *ftext2 = ast_init();
+    //ftext2->tag = FORMATTED_TEXT;
+    //ftext2->data.FormattedText.text = leaf2;
+    //ftext2->data.FormattedText.emphasis = NULL;
 
-    AST *paragraph = ast_init();
-    paragraph->tag = PARAGRAPH;
-    paragraph->data.Paragraph.formatted_text = ftext2;
+    //AST *paragraph = ast_init();
+    //paragraph->tag = PARAGRAPH;
+    //paragraph->data.Paragraph.formatted_text = ftext2;
 
-    AST *header_level = ast_init();
-    header_level->tag = HEADER_LEVEL;
-    header_level->data.HeaderLevel.hl = H1;
+    //AST *header_level = ast_init();
+    //header_level->tag = HEADER_LEVEL;
+    //header_level->data.HeaderLevel.hl = H1;
 
-    AST *header = ast_init();
-    header->tag = HEADER;
-    header->data.Header.formatted_text = ftext1;
-    header->data.Header.headerLevel = header_level;
+    //AST *header = ast_init();
+    //header->tag = HEADER;
+    //header->data.Header.formatted_text = ftext1;
+    //header->data.Header.headerLevel = header_level;
 
-    ASTList *ast_list = ast_list_init();
-    ast_list_append(ast_list, *header);
-    ast_list_append(ast_list, *paragraph);
+    //ASTList *ast_list = ast_list_init();
+    //ast_list_append(ast_list, *header);
+    //ast_list_append(ast_list, *paragraph);
 
-    AST *doc = ast_init();
-    doc->tag = DOCUMENT;
-    doc->data.Document.blocks = ast_list;
+    //AST *doc = ast_init();
+    //doc->tag = DOCUMENT;
+    //doc->data.Document.blocks = ast_list;
 
-    // Try a dump
-    ast_dump(doc);
+    //// Try a dump
+    //ast_dump(doc);
 
-    // Free stuff yipeeeeeee. Oh no the other free. 
-    // Freeing doc should recursively free everything else???
-    ast_free(doc);
-    free(doc);
-    doc = NULL;
+    //// Free stuff yipeeeeeee. Oh no the other free. 
+    //// Freeing doc should recursively free everything else???
+    //ast_free(doc);
+    //free(doc);
+    //doc = NULL;
 
     /**************************************************************/
     // char *str = "# This is some markdown\n## Hell yeah. More text!\n### Header 3 baby!!!!";

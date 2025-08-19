@@ -42,6 +42,7 @@ typedef struct TokenList {
 } TokenList;
 
 struct TokenList* token_list_init();
+struct TokenList* token_list_scan(NCString* src);
 void token_list_append(struct TokenList* self, struct Token t);
 void token_list_dump(const struct TokenList* self);
 void token_list_free(TokenList* self);
