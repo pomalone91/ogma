@@ -20,7 +20,7 @@ typedef enum TokenType {
     URL,
     IMG,
     EF
-} TokenType;
+} TokenType;;;;;;;
 
 // Token
 typedef struct Token
@@ -44,6 +44,7 @@ typedef struct TokenList {
 struct TokenList* token_list_init();
 struct TokenList* token_list_scan(NCString* src);
 void token_list_append(struct TokenList* self, struct Token t);
+struct Token* token_list_fetch_at_position(struct TokenList* self, int position);
 void token_list_dump(const struct TokenList* self);
 void token_list_free(TokenList* self);
 

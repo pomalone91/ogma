@@ -8,26 +8,46 @@
 
 int main (void) {
 
-    // Setting up the string
-    char *str = "# This *is* some markdown\n## Body\nLorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim **veniam**, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
-    size_t len = strlen(str);
-    NCString *src_str = nc_string_init(str, len);
+    //char *str = "# Markdown String\nNew line with *emphasis*";
+    //char *str = "# Markdown *String*\n";
+    //char *str = "Markdown *String*\n";
 
     MDDoc *m = md_doc_init();
-    m->source = src_str;
+    md_doc_set_source(m, "Markdown *String* with\nHere is another paragraph.\n");
     m->tokens = token_list_scan(m->source);
 
     md_doc_dump(m);
+    
+    ASTList *ast = ast_parse(m->tokens);
+
+    ast_list_dump(ast);
+
+    ast_list_free(ast);
     md_doc_free(m);
+
+    //// Setting up the string
+    //char *str = "# This *is* some markdown\n## Body\nLorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim **veniam**, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
+    //size_t len = strlen(str);
+    //NCString *src_str = nc_string_init(str, len);
+
+    //MDDoc *m = md_doc_init();
+    //m->source = src_str;
+    //m->tokens = token_list_scan(m->source);
+
+    //md_doc_dump(m);
+    //md_doc_free(m);
 
     /**************************************************************/
     //char *str1 = "Hey!";
-    //size_t len1 = sizeof(char) * 5;
-    //NCString *ncstr1 = nc_string_init(str1, len1);
+    //NCString *ncstr1 = nc_string_init(str1);
 
     //AST *leaf1 = ast_init();
     //leaf1->tag = TEXT;
     //leaf1->data.text = ncstr1;
+
+    //AST *evil_leaf = ast_init();
+    //evil_leaf->tag = TEXT;
+    //evil_leaf->data.text = ncstr1;
 
     //AST *ftext1 = ast_init();
     //ftext1->tag = FORMATTED_TEXT;
@@ -36,6 +56,8 @@ int main (void) {
 
     //ast_dump(ftext1);
 
+    //ast_free(leaf1);
+    //ast_free(evil_leaf);
     //ast_free(ftext1);
     
     /**************************************************************/

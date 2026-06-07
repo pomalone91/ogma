@@ -24,9 +24,9 @@ struct AST {
         FORMATTED_TEXT,
         TEXT,
         EMPHASIS,
-        EMPTY_LINE,
+        END_OF_LINE,
         TAG_EOF,
-        HEADER_LEVEL
+        HEADER_LEVEL,
     } tag;
 
     union {
@@ -40,10 +40,11 @@ struct AST {
         //    AST *block;
         //} Block;
 
-        // Header := HeaderLevel FormattedText EmptyLine
+        // Header := HeaderLevel FormattedText EndOfLine
         struct NodeHeader {
-            AST *headerLevel; 
+            AST *header_level; 
             AST *formatted_text;
+            AST *end_of_line;
         } Header;
 
         // HeaderLevel := '#' | '##' | '###' | '####' | '#####' | '######'
@@ -51,12 +52,12 @@ struct AST {
             TokenType hl; 
         } HeaderLevel;
 
-        // Paragraph := [ Formatted Text ]
+        // Paragraph := FormattedText | EndOfLine
         struct NodeParagraph {
             AST *formatted_text;
         } Paragraph;
 
-        // FormattedText := Emphasis | Text
+        // FormattedText := Emphasis | Text | EndOfLine
         struct NodeFormattedText {
             AST *text; 
             AST *emphasis; 
@@ -65,17 +66,17 @@ struct AST {
         // Text := Text
         NCString *text;
 
-        // Emphasis := Text | FormattedText
+        // Emphasis := Text | FormattedText | EndOfLine
         struct NodeEmphasis {
             AST *text; 
             AST *formatted_text;
+            AST *EndOfLine;
         } Emphasis;
 
         // EmptyLine := '\n'
-        struct NodeEmptyLine {
+        struct NodeEndOfLine {
             TokenType nl;
-            AST *next_block;
-        } EmptyLine;
+        } EndOfLine;
 
         // EndOfFile := '\0'
         TokenType eol;
@@ -93,5 +94,8 @@ struct ASTList* ast_list_init();
 void ast_list_append(struct ASTList* self, struct AST a);
 void ast_list_dump(const struct ASTList* self);
 void ast_list_free(ASTList* self);
+
+// AST Parse stuff
+struct ASTList* ast_parse(TokenList* tl);
 
 #endif /*ast_h*/

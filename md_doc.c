@@ -9,13 +9,19 @@ struct MDDoc* md_doc_init() {
     return malloc(sizeof(MDDoc));
 }
 
+void md_doc_set_source(MDDoc* doc, const char *str) {
+    doc->source = nc_string_init(str);
+}
+
 void md_doc_dump(const MDDoc* self) {
     if (self->source)
         nc_string_dump(self->source);
     if (self->tokens)
         token_list_dump(self->tokens);
-    if (self->tree)
+    if (self->tree) {
+        int *depth = malloc(sizeof(int));
         ast_dump(self->tree);
+    }
 }
 
 void md_doc_free(MDDoc* self) {

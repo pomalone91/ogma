@@ -14,6 +14,7 @@ typedef struct MDDoc {
 } MDDoc;
 
 struct MDDoc* md_doc_init();
+void md_doc_set_source(MDDoc* doc, const char* str);
 void md_doc_dump(const MDDoc* self);
 void md_doc_free(MDDoc* self);
 

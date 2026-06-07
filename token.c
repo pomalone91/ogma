@@ -7,6 +7,24 @@
 
 #define BASE_STR_SIZE 10
 
+const char * const token_type_str[] =
+{
+    [ERROR] = "ERROR",
+    [P] = "P",
+    [H1] = "H1",
+    [H2] = "H2",
+    [H3] = "H3",
+    [H4] = "H4",
+    [H5] = "H5",
+    [H6] = "H6",
+    [NL] = "NL",
+    [E1] = "E1",
+    [E2] = "E2",
+    [URL] = "URL",
+    [IMG] = "IMG",
+    [EF] = "EF"
+};
+
 // Token Implementation
 Token* token_init() {
     Token *t = malloc(sizeof(Token));
@@ -18,12 +36,13 @@ Token* token_init() {
 Token* token_init_with_components(NCString* str, TokenType type) {
     Token *t = malloc(sizeof(Token));
     t->type = type;
-    t->str = nc_string_init(str->str, str->len);
+    t->str = nc_string_init(str->str); // Make a new NCString that the token owns
+        
     return t;
 }
 
 void token_dump(const struct Token* self) {
-    printf("Type: %d; Length: %zu; Content: '%s'\n", self->type, self->str->len, self->str->str);
+    printf("Type: %s; Length: %zu; Content: '%s'\n", token_type_str[self->type], self->str->len, self->str->str);
 }
 
 void token_free(Token* self) {
@@ -128,22 +147,21 @@ struct TokenList* token_list_scan(NCString *source) {
                 if (source->str[look_ahead] == '*') {
                     tt = E2;
                     strcpy(e_str, "**");
-                    e_len = sizeof(char) * 2;
                     i++;
                 }
             }
 
-            NCString *e_nc_string = nc_string_init(e_str, e_len);
+            NCString *e_nc_string = nc_string_init(e_str);
             token_list_append(tl, *scan_token(e_nc_string, tt));
 
         } else if (current_char == '\n') {
             // New line
-            NCString *sub_string = nc_string_init("\\n", sizeof(char));
+            NCString *sub_string = nc_string_init("\\n");
             // Scan the token in
             token_list_append(tl, *scan_token(sub_string, NL));
         } else if (current_char == '\0') {
             // End of file
-            NCString *sub_string = nc_string_init("\\0", sizeof(char));
+            NCString *sub_string = nc_string_init("\\0");
             token_list_append(tl, *scan_token(sub_string, EF));
             break;
         } else {
@@ -184,10 +202,14 @@ void token_list_append(struct TokenList* self, Token t) {
             return;
         }
     }
-    (self->token + self->count)->str =  nc_string_init(t.str->str, t.str->len);
+    (self->token + self->count)->str =  nc_string_init(t.str->str);
     (self->token + self->count)->type = t.type;
 
     self->count++;
+}
+
+struct Token* token_list_fetch_at_position(struct TokenList* self, int position) {
+    return (self->token + position);
 }
 
 void token_list_dump(const struct TokenList* self) {
