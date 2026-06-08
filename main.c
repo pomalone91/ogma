@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "token.h"
-#include "../lib/nc_string.h"
 #include "ast.h"
 #include "md_doc.h"
 
@@ -12,8 +8,11 @@ int main (void) {
     //char *str = "# Markdown *String*\n";
     //char *str = "Markdown *String*\n";
 
+    char *str = "# This *is* some markdown\n## Body\nLorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim **veniam**, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
+    //char *str = "# This *is* some markdown\n## Body\n";
+
     MDDoc *m = md_doc_init();
-    md_doc_set_source(m, "Markdown *String* with\nHere is another paragraph.\n");
+    md_doc_set_source(m, str);
     m->tokens = token_list_scan(m->source);
 
     md_doc_dump(m);
@@ -25,8 +24,6 @@ int main (void) {
     ast_list_free(ast);
     md_doc_free(m);
 
-    //// Setting up the string
-    //char *str = "# This *is* some markdown\n## Body\nLorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim **veniam**, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
     //size_t len = strlen(str);
     //NCString *src_str = nc_string_init(str, len);
 

@@ -18,17 +18,17 @@ void ast_dump(const struct AST* self) {
         case TEXT: 
 
             printf("TEXT: ");
-            printf("%s\n", self->data.text->str);
+            printf("%s ", self->data.text->str);
             return;
         case END_OF_LINE:
-            printf("EMPTY LINE\n");
+            printf("EMPTY LINE ");
             return;
         case TAG_EOF:
-            printf("END OF FILE\n");
+            printf("END OF FILE ");
             return;
         case HEADER_LEVEL:
             printf("HEADER LEVEL: ");
-            printf("%d\n", self->data.HeaderLevel.hl);
+            printf("%d ", self->data.HeaderLevel.hl);
             return;
         // Non-leaf nodes require recursive descent
         case DOCUMENT:
@@ -39,7 +39,7 @@ void ast_dump(const struct AST* self) {
             printf("Printing Block!\n");
             return;
         case HEADER:
-            printf("HEADER: ");
+            printf("\nHEADER: ");
             if (self->data.Header.header_level) {
                 ast_dump(self->data.Header.header_level);
             }
@@ -48,7 +48,7 @@ void ast_dump(const struct AST* self) {
             }
             return;
         case PARAGRAPH:
-            printf("PARAGRAPH: ");
+            printf("\nPARAGRAPH: ");
             if (self->data.Paragraph.formatted_text) {
                 ast_dump(self->data.Paragraph.formatted_text);
             }
@@ -362,6 +362,7 @@ ASTList* ast_parse(TokenList* tl) {
                 ast_list_append(astl, *parse_header(tl, position, emphasis_flag));
                 break;
             case H2:
+                ast_list_append(astl, *parse_header(tl, position, emphasis_flag));
                 printf("Parsing header\n");
                 break;
             case H3:
