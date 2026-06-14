@@ -219,6 +219,7 @@ void ast_list_dump(const struct ASTList* self) {
     {
         ast_dump(self->nodes + i);
     }
+    printf("\n");
 }
 
 void ast_list_free(ASTList* self) {
